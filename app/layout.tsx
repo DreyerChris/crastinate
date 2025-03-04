@@ -36,7 +36,7 @@ export default function RootLayout({
 		<ClerkProvider appearance={{ baseTheme: dark }}>
 			<html lang="en" data-theme="sunset" className="w-full h-full dark">
 				<body
-					className={`${geistSans.variable} ${geistMono.variable} antialiased h-full w-full`}
+					className={`${geistSans.variable} ${geistMono.variable} antialiased h-full w-full fixed`}
 				>
 					<Background />
 					{children}

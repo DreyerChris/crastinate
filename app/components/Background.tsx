@@ -20,7 +20,7 @@ export default function Background() {
 				gridTemplateRows: "repeat(auto-fill, 32px)",
 			}}
 		>
-			{[...Array(300)].map((_, i) => (
+			{[...Array(2000)].map((_, i) => (
 				// biome-ignore lint:
 				<Cell key={i} />
 			))}
