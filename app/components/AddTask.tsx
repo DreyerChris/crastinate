@@ -1,6 +1,7 @@
 "use client";
 
 import { addTaskAction } from "../actions";
+import TaskType from "./TaskType";
 
 export const AddTask = () => {
 	return (
@@ -16,8 +17,26 @@ export const AddTask = () => {
 			<dialog id="add_task_modal" className="modal">
 				<div className="modal-box">
 					<h3 className="font-bold text-lg">Add a new task</h3>
-					<div className="modal-action">
-						<form action={addTaskAction}>
+					<div className="modal-body">
+						<form action={addTaskAction} className="flex flex-col gap-4 mt-6">
+							<fieldset className="fieldset">
+								<legend className="fieldset-legend">Title</legend>
+								<input
+									className="input"
+									placeholder="Add a title for your task"
+									name="title"
+								/>
+							</fieldset>
+							<fieldset className="fieldset">
+								<legend className="fieldset-legend">Description</legend>
+								<textarea
+									className="textarea h-6"
+									placeholder="Describe your task"
+									name="description"
+								/>
+								<div className="fieldset-label">Optional</div>
+							</fieldset>
+							<TaskType />
 							<button
 								type="submit"
 								className="btn btn-primary"

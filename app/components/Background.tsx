@@ -14,7 +14,7 @@ const COLOR_CLASSES = [
 export default function Background() {
 	return (
 		<div
-			className="absolute top-0 left-0 w-full h-full grid bg-[#050505] z-0"
+			className="absolute top-0 left-0 w-full h-full grid bg-[#050505] z-0 overflow-hidden"
 			style={{
 				gridTemplateColumns: "repeat(auto-fill, 32px)",
 				gridTemplateRows: "repeat(auto-fill, 32px)",

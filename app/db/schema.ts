@@ -1,6 +1,6 @@
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-export const tasksTable = sqliteTable("users_table", {
+export const tasksTable = sqliteTable("tasks_table", {
 	id: int().primaryKey({ autoIncrement: true }),
 	userId: text().notNull(),
 	title: text().notNull(),

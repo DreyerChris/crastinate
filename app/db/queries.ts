@@ -36,6 +36,9 @@ export const MUTATIONS = {
 	createTask: async (task: typeof tasksTable.$inferInsert) => {
 		await db.insert(tasksTable).values(task);
 	},
+	createTasks: async (tasks: (typeof tasksTable.$inferInsert)[]) => {
+		await db.insert(tasksTable).values(tasks);
+	},
 	deleteTask: async (taskId: number) => {
 		await db
 			.update(tasksTable)
@@ -45,7 +48,7 @@ export const MUTATIONS = {
 	completeTask: async (taskId: number) => {
 		await db
 			.update(tasksTable)
-			.set({ status: "completed" })
+			.set({ status: "completed", completedDate: new Date().toISOString() })
 			.where(eq(tasksTable.id, taskId));
 	},
 };
