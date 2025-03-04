@@ -35,6 +35,13 @@ export default function RootLayout({
 	return (
 		<ClerkProvider appearance={{ baseTheme: dark }}>
 			<html lang="en" data-theme="sunset" className="w-full h-full dark">
+				<head>
+					<meta
+						name="viewport"
+						content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+					/>
+				</head>
+
 				<body
 					className={`${geistSans.variable} ${geistMono.variable} antialiased h-full w-full fixed`}
 				>
