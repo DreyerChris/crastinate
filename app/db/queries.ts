@@ -1,5 +1,5 @@
 import { addDays } from "date-fns";
-import { and, desc, eq, gte, lte, or } from "drizzle-orm";
+import { and, asc, eq, lte, or } from "drizzle-orm";
 import { db } from ".";
 import { tasksTable } from "./schema";
 
@@ -20,7 +20,7 @@ export const QUERIES = {
 					),
 				),
 			)
-			.orderBy(desc(tasksTable.deadlineDate));
+			.orderBy(asc(tasksTable.deadlineDate));
 		return tasks;
 	},
 	getCompletedTasks: async (userId: string) => {

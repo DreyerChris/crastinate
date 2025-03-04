@@ -1,3 +1,5 @@
+"use client";
+import { format, parseISO } from "date-fns";
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 
@@ -10,6 +12,23 @@ export default function DatePicker({ id, required = true }: DatePickerProps) {
 	const [date, setDate] = useState<Date | undefined>();
 	const [isOpen, setIsOpen] = useState(false);
 
+	// Convert date to UTC ISO string for form submission
+	const toUTCString = (date: Date | undefined): string => {
+		if (!date) return "";
+
+		// Create a new date with UTC time components
+		const utcDate = new Date(
+			Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0),
+		);
+
+		return utcDate.toISOString();
+	};
+
+	// Format date for display
+	const formatDateForDisplay = (date: Date | undefined): string => {
+		return date ? format(date, "MMM d, yyyy") : "Pick a date";
+	};
+
 	const handleDateSelect = (selectedDate: Date | undefined) => {
 		setDate(selectedDate);
 		setIsOpen(false);
@@ -17,9 +36,7 @@ export default function DatePicker({ id, required = true }: DatePickerProps) {
 		// Update the hidden input and trigger form validation
 		const input = document.getElementById(id) as HTMLInputElement;
 		if (input) {
-			input.value = selectedDate
-				? selectedDate.toISOString().split("T")[0]
-				: "";
+			input.value = selectedDate ? toUTCString(selectedDate) : "";
 			input.dispatchEvent(new Event("change", { bubbles: true }));
 		}
 	};
@@ -31,7 +48,7 @@ export default function DatePicker({ id, required = true }: DatePickerProps) {
 				id={id}
 				name={id}
 				required={required}
-				value={date ? date.toISOString().split("T")[0] : ""}
+				value={date ? toUTCString(date) : ""}
 			/>
 			<button
 				onClick={() => setIsOpen(!isOpen)}
@@ -42,12 +59,12 @@ export default function DatePicker({ id, required = true }: DatePickerProps) {
 				aria-expanded={isOpen}
 				aria-controls={`${id}-picker`}
 			>
-				{date ? date.toLocaleDateString() : "Pick a date"}
+				{formatDateForDisplay(date)}
 			</button>
 			{isOpen && (
 				<div
 					id={`${id}-popover`}
-					className="dropdown absolute top-0 left-0 z-50 bg-base-200 rounded-lg shadow-lg"
+					className="dropdown absolute z-50 bg-base-200 rounded-lg shadow-lg"
 					style={{ positionAnchor: "--rdp" } as React.CSSProperties}
 				>
 					<DayPicker

@@ -1,6 +1,7 @@
 "use client";
 import { CalendarIcon, CheckIcon, TrashIcon } from "@heroicons/react/16/solid";
 import clsx from "clsx";
+import { format, parseISO } from "date-fns";
 import { useState } from "react";
 import { completeTaskAction, deleteTaskAction } from "../actions";
 import type { tasksTable } from "../db/schema";
@@ -13,10 +14,20 @@ type TaskProps = {
 export const Task = ({ task, variant = "upcoming" }: TaskProps) => {
 	const [showActions, setShowActions] = useState(false);
 
-	const daysFrom = Math.floor(
-		(new Date(task.deadlineDate).getTime() - new Date().getTime()) /
-			(1000 * 60 * 60 * 24),
+	// Parse the deadline date as UTC
+	const deadlineDate = parseISO(task.deadlineDate);
+	const now = new Date();
+
+	// Calculate days from now to deadline
+	const daysFromNow = Math.floor(
+		(deadlineDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
 	);
+
+	// Format dates for display
+	const formattedDeadlineDate = format(deadlineDate, "MMM d, yyyy");
+	const formattedCompletedDate = task.completedDate
+		? format(parseISO(task.completedDate), "MMM d, yyyy")
+		: "";
 
 	const toggleActions = () => setShowActions(!showActions);
 
@@ -27,9 +38,9 @@ export const Task = ({ task, variant = "upcoming" }: TaskProps) => {
 					"card bg-base-300 shadow-sm w-full text-left rounded-lg",
 					variant === "completed"
 						? "border-success border-[1px] border-l-6"
-						: daysFrom > 2
+						: daysFromNow > 2
 							? "border-l-6 border-success"
-							: daysFrom <= 2 && daysFrom > -2
+							: daysFromNow <= 2 && daysFromNow > -2
 								? "border-l-6 border-warning"
 								: "border-l-6 border-error",
 				)}
@@ -38,51 +49,45 @@ export const Task = ({ task, variant = "upcoming" }: TaskProps) => {
 				type="button"
 			>
 				<div className="card-body p-2 flex-row items-center gap-2">
-					{/* Days indicator - made more compact */}
 					{variant === "upcoming" && (
 						<span
 							className={clsx(
 								"text-lg font-bold min-w-6 text-center",
-								daysFrom > 2
+								daysFromNow > 2
 									? "text-success"
-									: daysFrom <= 2 && daysFrom > -2
+									: daysFromNow <= 2 && daysFromNow > -2
 										? "text-warning"
 										: "text-error",
 							)}
 						>
-							{`${daysFrom > 0 ? "-" : daysFrom === -1 ? "" : "+"}${Math.abs(daysFrom)}d`}
+							{`${daysFromNow > 0 ? "-" : daysFromNow >= -1 && daysFromNow <= 0 ? "" : "+"}${Math.abs(daysFromNow)}d`}
 						</span>
 					)}
 
-					{/* Task title - expanded to take more space */}
 					<div className="flex-1 min-w-0 pr-1">
 						<div className="flex items-baseline gap-2">
 							<h3
 								className={clsx(
-									"text-base-content truncate flex-1 font-bold",
+									"text-base-content font-medium truncate flex-1",
 									variant === "completed" && "text-success",
 								)}
 							>
 								{task.title}
 							</h3>
 
-							{/* Due date - moved inline with title */}
 							{variant === "upcoming" && (
 								<span className="text-xs text-gray-500 whitespace-nowrap">
-									{`due ${new Date(task.deadlineDate).toLocaleDateString()}`}
+									{formattedDeadlineDate}
 								</span>
 							)}
-							{variant === "completed" && task.completedDate && (
-								<div className="text-xs text-success">
-									Completed: {new Date(task.completedDate).toLocaleDateString()}
-								</div>
-							)}
 						</div>
-
-						{/* Completed date */}
 					</div>
 
-					{/* Completed indicator */}
+					{variant === "completed" && task.completedDate && (
+						<div className="text-xs text-success ml-auto">
+							{formattedCompletedDate}
+						</div>
+					)}
 					{variant === "completed" && (
 						<div className="flex gap-2 items-center">
 							<CheckIcon className="w-4 h-4 text-success" />
@@ -93,7 +98,7 @@ export const Task = ({ task, variant = "upcoming" }: TaskProps) => {
 
 			{/* Action buttons toolbar - only shown when task is clicked */}
 			{variant === "upcoming" && showActions && (
-				<div className="absolute bg-base-300 right-0 top-1/2 -translate-y-1/2 flex justify-center gap-3 p-2 rounded-md shadow-md z-10 animate-fadeIn">
+				<div className="absolute right-0 top-1/2 -translate-y-1/2 flex justify-center gap-3 bg-base-300 pr-2 rounded-md shadow-md z-10 animate-fadeIn">
 					<button
 						className="bg-warning p-2 rounded-full group cursor-pointer flex items-center gap-2"
 						type="button"

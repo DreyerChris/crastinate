@@ -1,6 +1,6 @@
 "use server";
 import { auth } from "@clerk/nextjs/server";
-import { add } from "date-fns";
+import { add, parseISO } from "date-fns";
 import { revalidatePath } from "next/cache";
 import { MUTATIONS, QUERIES } from "../db/queries";
 import type { tasksTable } from "../db/schema";
@@ -9,20 +9,28 @@ type RecurringFrequency = "daily" | "weekly" | "monthly" | "yearly";
 type TaskType = "one-off" | "deadline" | "recurring";
 type TaskStatus = "pending" | "completed" | "deleted";
 
+// Ensure date is in UTC format
+const ensureUTCDate = (dateString: string): string => {
+	if (!dateString) return "";
+
+	try {
+		// Parse the date and ensure it's in UTC
+		const date = parseISO(dateString);
+		return date.toISOString();
+	} catch (error) {
+		console.error("Invalid date format:", dateString);
+		return dateString;
+	}
+};
+
 const getRecurringTaskDates = (
 	startDate: string,
 	frequency: RecurringFrequency,
-) => {
+	count = 12,
+): string[] => {
 	const dates: string[] = [];
-	const start = new Date(startDate);
-	const durationMultiplier =
-		frequency === "yearly"
-			? 1
-			: frequency === "monthly"
-				? 12
-				: frequency === "weekly"
-					? 52
-					: 365;
+	// Parse the start date as UTC
+	const start = parseISO(startDate);
 	const duration =
 		frequency === "yearly"
 			? "years"
@@ -32,12 +40,10 @@ const getRecurringTaskDates = (
 					? "weeks"
 					: "days";
 
-	for (let i = 0; i < durationMultiplier * 1; i++) {
-		dates.push(
-			add(start, { [duration]: i })
-				.toISOString()
-				.split("T")[0],
-		);
+	for (let i = 0; i < count; i++) {
+		// Add the interval and ensure UTC format
+		const nextDate = add(start, { [duration]: i });
+		dates.push(nextDate.toISOString());
 	}
 	return dates;
 };
@@ -69,9 +75,9 @@ export const addTaskAction = async (formData: FormData) => {
 		rawFormData.recurringFrequency &&
 		rawFormData.recurringStartDate
 	) {
-		// Get the next 12 occurrences of the recurring task
+		// Get the next 12 occurrences of the recurring task with UTC dates
 		const dates = getRecurringTaskDates(
-			rawFormData.recurringStartDate,
+			ensureUTCDate(rawFormData.recurringStartDate),
 			rawFormData.recurringFrequency,
 		);
 
@@ -92,7 +98,7 @@ export const addTaskAction = async (formData: FormData) => {
 			description: rawFormData.description,
 			userId,
 			type: rawFormData.type,
-			deadlineDate: rawFormData.deadlineDate,
+			deadlineDate: ensureUTCDate(rawFormData.deadlineDate),
 			status: "pending" as const,
 		};
 
@@ -124,6 +130,9 @@ export const completeTaskAction = async (taskId: number) => {
 		return;
 	}
 
-	await MUTATIONS.completeTask(taskId);
+	// Use current time in UTC format
+	const completedDate = new Date().toISOString();
+
+	await MUTATIONS.completeTask(taskId, completedDate);
 	revalidatePath("/");
 };
