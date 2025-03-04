@@ -14,7 +14,7 @@ export const AddTask = () => {
 			>
 				Add Task
 			</button>
-			<dialog id="add_task_modal" className="modal w-full max-h-full">
+			<dialog id="add_task_modal" className="modal w-full max-h-dvh">
 				<div className="modal-box">
 					<h3 className="font-bold text-lg">Add a new task</h3>
 					<div className="modal-body">
