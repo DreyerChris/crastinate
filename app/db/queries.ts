@@ -56,10 +56,10 @@ export const MUTATIONS = {
 			.set({ status: "deleted" })
 			.where(eq(tasksTable.id, taskId));
 	},
-	completeTask: async (taskId: number) => {
+	completeTask: async (taskId: number, completedDate: string) => {
 		await db
 			.update(tasksTable)
-			.set({ status: "completed", completedDate: new Date().toISOString() })
+			.set({ status: "completed", completedDate })
 			.where(eq(tasksTable.id, taskId));
 	},
 };
