@@ -64,7 +64,7 @@ const TaskType = () => {
 								}`}
 							/>
 							<div className="text-center">
-								<div className="font-medium">{label}</div>
+								<div className="font-medium text-base">{label}</div>
 								<div className="text-sm text-base-content/70">
 									{description}
 								</div>

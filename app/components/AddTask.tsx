@@ -25,7 +25,7 @@ export const AddTask = () => {
 							<fieldset className="fieldset">
 								<legend className="fieldset-legend">Title</legend>
 								<input
-									className="input w-full"
+									className="input w-full text-base"
 									placeholder="Add a title for your task"
 									name="title"
 								/>
@@ -33,7 +33,7 @@ export const AddTask = () => {
 							<fieldset className="fieldset">
 								<legend className="fieldset-legend">Description</legend>
 								<textarea
-									className="textarea h-6 w-full"
+									className="textarea h-6 w-full text-base"
 									placeholder="Describe your task"
 									name="description"
 								/>

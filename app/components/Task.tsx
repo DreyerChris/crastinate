@@ -77,7 +77,7 @@ export const Task = ({ task, variant = "upcoming" }: TaskProps) => {
 
 							{variant === "upcoming" && (
 								<span className="text-xs text-gray-500 whitespace-nowrap">
-									{formattedDeadlineDate}
+									{`due ${formattedDeadlineDate}`}
 								</span>
 							)}
 						</div>

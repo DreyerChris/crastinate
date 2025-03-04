@@ -52,7 +52,7 @@ export default function DatePicker({ id, required = true }: DatePickerProps) {
 			/>
 			<button
 				onClick={() => setIsOpen(!isOpen)}
-				className="input input-border w-full text-left"
+				className="input input-border w-full text-left text-base"
 				style={{ anchorName: "--rdp" } as React.CSSProperties}
 				type="button"
 				aria-label="Select date"
@@ -64,7 +64,7 @@ export default function DatePicker({ id, required = true }: DatePickerProps) {
 			{isOpen && (
 				<div
 					id={`${id}-popover`}
-					className="dropdown absolute z-50 bg-base-200 rounded-lg shadow-lg"
+					className="dropdown absolute top-0 left-0 z-50 bg-base-200 rounded-lg shadow-lg"
 					style={{ positionAnchor: "--rdp" } as React.CSSProperties}
 				>
 					<DayPicker
