@@ -14,7 +14,7 @@ export default async function Home() {
 	}
 
 	return (
-		<div className="relative flex flex-col items-center justify-center h-full p-4 bg-gray-900 gap-6">
+		<div className="relative flex flex-col items-center justify-center h-full w-full p-4 bg-gray-900 gap-6">
 			<Background />
 			<div className="z-1 relative bg-zinc-950 px-4 py-8 lg:p-8 flex flex-col justify-center items-center gap-6 rounded-md max-h-full">
 				<div className="absolute w-full h-2 bg-gradient-to-r from-primary via-secondary to-accent rounded-tr rounded-tl -top-2" />

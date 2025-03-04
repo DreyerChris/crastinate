@@ -14,7 +14,7 @@ export const AddTask = () => {
 			>
 				Add Task
 			</button>
-			<dialog id="add_task_modal" className="modal w-full">
+			<dialog id="add_task_modal" className="modal w-full h-full">
 				<div className="modal-box">
 					<h3 className="font-bold text-lg">Add a new task</h3>
 					<div className="modal-body">
@@ -53,7 +53,17 @@ export const AddTask = () => {
 					</div>
 				</div>
 				<form method="dialog" className="modal-backdrop">
-					<button type="button">close</button>
+					<button
+						type="button"
+						onClick={() =>
+							document
+								.getElementById("add_task_modal")
+								// @ts-ignore
+								?.close()
+						}
+					>
+						close
+					</button>
 				</form>
 			</dialog>
 		</>
