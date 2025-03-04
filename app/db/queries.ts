@@ -1,15 +1,26 @@
-import { and, eq } from "drizzle-orm";
+import { addDays } from "date-fns";
+import { and, desc, eq, gte, lte, or } from "drizzle-orm";
 import { db } from ".";
 import { tasksTable } from "./schema";
 
 export const QUERIES = {
-	getUpcomingTasks: async (userId: string) => {
+	getUpcomingTasks: async (userId: string, days: number) => {
 		const tasks = await db
 			.select()
 			.from(tasksTable)
 			.where(
-				and(eq(tasksTable.userId, userId), eq(tasksTable.status, "pending")),
-			);
+				and(
+					eq(tasksTable.userId, userId),
+					eq(tasksTable.status, "pending"),
+					or(
+						lte(
+							tasksTable.deadlineDate,
+							addDays(new Date(), days).toISOString(),
+						),
+					),
+				),
+			)
+			.orderBy(desc(tasksTable.deadlineDate));
 		return tasks;
 	},
 	getCompletedTasks: async (userId: string) => {

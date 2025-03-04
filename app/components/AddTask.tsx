@@ -18,11 +18,14 @@ export const AddTask = () => {
 				<div className="modal-box max-h-dvh">
 					<h3 className="font-bold text-lg">Add a new task</h3>
 					<div className="modal-body">
-						<form action={addTaskAction} className="flex flex-col gap-4 mt-6">
+						<form
+							action={addTaskAction}
+							className="flex flex-col gap-4 mt-6 w-full"
+						>
 							<fieldset className="fieldset">
 								<legend className="fieldset-legend">Title</legend>
 								<input
-									className="input"
+									className="input w-full"
 									placeholder="Add a title for your task"
 									name="title"
 								/>
@@ -30,7 +33,7 @@ export const AddTask = () => {
 							<fieldset className="fieldset">
 								<legend className="fieldset-legend">Description</legend>
 								<textarea
-									className="textarea h-6"
+									className="textarea h-6 w-full"
 									placeholder="Describe your task"
 									name="description"
 								/>
