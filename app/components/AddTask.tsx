@@ -1,9 +1,30 @@
 "use client";
 
 import { addTaskAction } from "../actions";
+import { useTasks } from "../providers/TasksProvider";
 import TaskType from "./TaskType";
 
 export const AddTask = () => {
+	const { addOptimisticUpcomingTask } = useTasks();
+
+	const formAction = async (formData: FormData) => {
+		const title = formData.get("title") as string;
+		const taskType = formData.get("taskType") as string;
+		const deadlineDate = formData.get("deadlineDate") as string;
+
+		addOptimisticUpcomingTask({
+			title,
+			description: null,
+			type: taskType as "recurring" | "deadline" | "one-off",
+			deadlineDate: deadlineDate ?? "",
+			status: "pending",
+			completedDate: null,
+			id: 0,
+			userId: "",
+		});
+		addTaskAction(formData);
+	};
+
 	return (
 		<>
 			<button

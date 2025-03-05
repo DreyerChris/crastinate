@@ -8,22 +8,18 @@ import type { tasksTable } from "../db/schema";
 
 type TaskProps = {
 	task: typeof tasksTable.$inferSelect;
-	variant?: "completed" | "upcoming";
 };
 
-export const Task = ({ task, variant = "upcoming" }: TaskProps) => {
+export const Task = ({ task }: TaskProps) => {
 	const [showActions, setShowActions] = useState(false);
 
-	// Parse the deadline date as UTC
 	const deadlineDate = parseISO(task.deadlineDate);
 	const now = new Date();
 
-	// Calculate days from now to deadline
 	const daysFromNow = Math.floor(
 		(deadlineDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
 	);
 
-	// Format dates for display
 	const formattedDeadlineDate = format(deadlineDate, "MMM d, yyyy");
 	const formattedCompletedDate = task.completedDate
 		? format(parseISO(task.completedDate), "MMM d, yyyy")
@@ -36,7 +32,7 @@ export const Task = ({ task, variant = "upcoming" }: TaskProps) => {
 			<button
 				className={clsx(
 					"card bg-base-300 shadow-sm w-full text-left rounded-lg",
-					variant === "completed"
+					task.status === "completed"
 						? "border-success border-[1px] border-l-6"
 						: daysFromNow > 2
 							? "border-l-6 border-success"
@@ -49,7 +45,7 @@ export const Task = ({ task, variant = "upcoming" }: TaskProps) => {
 				type="button"
 			>
 				<div className="card-body p-2 flex-row items-center gap-2">
-					{variant === "upcoming" && (
+					{task.status !== "completed" && (
 						<span
 							className={clsx(
 								"text-lg font-bold min-w-6 text-center",
@@ -69,13 +65,13 @@ export const Task = ({ task, variant = "upcoming" }: TaskProps) => {
 							<h3
 								className={clsx(
 									"text-base-content font-medium truncate flex-1",
-									variant === "completed" && "text-success",
+									task.status === "completed" && "text-success",
 								)}
 							>
 								{task.title}
 							</h3>
 
-							{variant === "upcoming" && (
+							{task.status !== "completed" && (
 								<span className="text-xs text-gray-500 whitespace-nowrap">
 									{`due ${formattedDeadlineDate}`}
 								</span>
@@ -83,12 +79,12 @@ export const Task = ({ task, variant = "upcoming" }: TaskProps) => {
 						</div>
 					</div>
 
-					{variant === "completed" && task.completedDate && (
+					{task.status === "completed" && (
 						<div className="text-xs text-success ml-auto">
 							{formattedCompletedDate}
 						</div>
 					)}
-					{variant === "completed" && (
+					{task.status === "completed" && (
 						<div className="flex gap-2 items-center">
 							<CheckIcon className="w-4 h-4 text-success" />
 						</div>
@@ -96,8 +92,7 @@ export const Task = ({ task, variant = "upcoming" }: TaskProps) => {
 				</div>
 			</button>
 
-			{/* Action buttons toolbar - only shown when task is clicked */}
-			{variant === "upcoming" && showActions && (
+			{task.status !== "completed" && showActions && (
 				<div className="absolute right-0 top-1/2 -translate-y-1/2 flex justify-center gap-3 bg-base-300 pr-2 rounded-md shadow-md z-10 animate-fadeIn">
 					<button
 						className="bg-warning p-2 rounded-full group cursor-pointer flex items-center gap-2"
