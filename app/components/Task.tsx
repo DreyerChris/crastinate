@@ -98,34 +98,32 @@ export const Task = ({ task }: TaskProps) => {
 						</span>
 					)}
 
-					<div className="flex-1 min-w-0 pr-1">
-						<div className="flex items-center justify-between gap-2">
-							<h3
-								className={clsx(
-									"text-base-content font-medium truncate flex-1",
-									task.status === "completed" && "text-success",
-								)}
-							>
-								{task.title}
-							</h3>
-
-							{task.status !== "completed" && (
-								<div className="flex items-center gap-2">
-									<span className="text-xs text-gray-500 whitespace-nowrap">
-										{task.type === "deadline" ? (
-											<ExclamationCircleIcon className="w-4 h-4 text-error" />
-										) : task.type === "recurring" ? (
-											<ArrowPathIcon className="w-4 h-4 text-neutral-content" />
-										) : (
-											<CalendarIcon className="w-4 h-4 text-neutral-content" />
-										)}
-									</span>
-									<span className="text-xs text-gray-500 whitespace-nowrap">
-										{`due ${formattedDeadlineDate}`}
-									</span>
-								</div>
+					<div className="flex items-center justify-between gap-2 w-full pr-1">
+						<h3
+							className={clsx(
+								"text-base-content font-medium truncate flex-1",
+								task.status === "completed" && "text-success",
 							)}
-						</div>
+						>
+							{task.title}
+						</h3>
+
+						{task.status !== "completed" && (
+							<div className="flex items-center gap-2">
+								<span className="text-xs text-gray-500 whitespace-nowrap">
+									{task.type === "deadline" ? (
+										<ExclamationCircleIcon className="w-4 h-4 text-error" />
+									) : task.type === "recurring" ? (
+										<ArrowPathIcon className="w-4 h-4 text-neutral-content" />
+									) : (
+										<CalendarIcon className="w-4 h-4 text-neutral-content" />
+									)}
+								</span>
+								<span className="text-xs text-gray-500 whitespace-nowrap">
+									{`due ${formattedDeadlineDate}`}
+								</span>
+							</div>
+						)}
 					</div>
 
 					{task.status === "completed" && (
