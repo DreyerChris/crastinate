@@ -7,14 +7,11 @@ import type { tasksTable } from "../db/schema";
 
 type RecurringFrequency = "daily" | "weekly" | "monthly" | "yearly";
 type TaskType = "one-off" | "deadline" | "recurring";
-type TaskStatus = "pending" | "completed" | "deleted";
 
-// Ensure date is in UTC format
 const ensureUTCDate = (dateString: string): string => {
 	if (!dateString) return "";
 
 	try {
-		// Parse the date and ensure it's in UTC
 		const date = parseISO(dateString);
 		return date.toISOString();
 	} catch (error) {
@@ -29,7 +26,6 @@ const getRecurringTaskDates = (
 	count = 12,
 ): string[] => {
 	const dates: string[] = [];
-	// Parse the start date as UTC
 	const start = parseISO(startDate);
 	const duration =
 		frequency === "yearly"
@@ -41,7 +37,6 @@ const getRecurringTaskDates = (
 					: "days";
 
 	for (let i = 0; i < count; i++) {
-		// Add the interval and ensure UTC format
 		const nextDate = add(start, { [duration]: i });
 		dates.push(nextDate.toISOString());
 	}
@@ -75,13 +70,11 @@ export const addTaskAction = async (formData: FormData) => {
 		rawFormData.recurringFrequency &&
 		rawFormData.recurringStartDate
 	) {
-		// Get the next 12 occurrences of the recurring task with UTC dates
 		const dates = getRecurringTaskDates(
 			ensureUTCDate(rawFormData.recurringStartDate),
 			rawFormData.recurringFrequency,
 		);
 
-		// Create all recurring tasks at once
 		const tasks: (typeof tasksTable.$inferInsert)[] = dates.map((date) => ({
 			title: rawFormData.title,
 			description: rawFormData.description,

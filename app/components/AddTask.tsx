@@ -10,7 +10,7 @@ type AddTaskProps = {
 };
 
 export const AddTask = ({ daysFilter }: AddTaskProps) => {
-	const { optimisticUpcomingTasks, updateOptimisticUpcomingTasks } = useTasks();
+	const { updateOptimisticUpcomingTasks } = useTasks();
 
 	const formAction = async (formData: FormData) => {
 		const title = formData.get("title") as string;

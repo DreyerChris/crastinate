@@ -3,10 +3,10 @@ import { redirect } from "next/navigation";
 import { AddTask } from "./components/AddTask";
 import Background from "./components/Background";
 import { TaskList } from "./components/TaskList";
+import ThemeSwitcher from "./components/ThemeSwitcher";
 import SegmentedControl from "./components/ui/SegmentedControl";
 import { QUERIES } from "./db/queries";
 import TasksProvider from "./providers/TasksProvider";
-
 export default async function Home({
 	searchParams,
 }: {
@@ -29,6 +29,7 @@ export default async function Home({
 		>
 			<div className="relative flex flex-col items-center justify-center h-full w-full p-4 bg-gray-900 gap-6">
 				<Background />
+				<ThemeSwitcher />
 				<div className="z-1 relative bg-zinc-950 px-4 py-8 lg:p-8 flex flex-col justify-center items-center gap-6 rounded-md max-h-full">
 					<div className="absolute w-full h-2 bg-gradient-to-r from-primary via-secondary to-accent rounded-tr rounded-tl -top-2" />
 					<article className="text-center prose z-0">

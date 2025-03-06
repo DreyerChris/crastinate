@@ -12,11 +12,9 @@ export default function DatePicker({ id, required = true }: DatePickerProps) {
 	const [date, setDate] = useState<Date | undefined>(new Date());
 	const [isOpen, setIsOpen] = useState(false);
 
-	// Convert date to UTC ISO string for form submission
 	const toUTCString = (date: Date | undefined): string => {
 		if (!date) return "";
 
-		// Create a new date with UTC time components
 		const utcDate = new Date(
 			Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0),
 		);
@@ -24,7 +22,6 @@ export default function DatePicker({ id, required = true }: DatePickerProps) {
 		return utcDate.toISOString();
 	};
 
-	// Format date for display
 	const formatDateForDisplay = (date: Date | undefined): string => {
 		return date ? format(date, "MMM d, yyyy") : "Pick a date";
 	};
@@ -33,7 +30,6 @@ export default function DatePicker({ id, required = true }: DatePickerProps) {
 		setDate(selectedDate);
 		setIsOpen(false);
 
-		// Update the hidden input and trigger form validation
 		const input = document.getElementById(id) as HTMLInputElement;
 		if (input) {
 			input.value = selectedDate ? toUTCString(selectedDate) : "";

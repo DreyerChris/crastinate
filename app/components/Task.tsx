@@ -1,5 +1,11 @@
 "use client";
-import { CalendarIcon, CheckIcon, TrashIcon } from "@heroicons/react/16/solid";
+import {
+	ArrowPathIcon,
+	CalendarIcon,
+	CheckIcon,
+	ExclamationCircleIcon,
+	TrashIcon,
+} from "@heroicons/react/16/solid";
 import clsx from "clsx";
 import { addDays, format, parseISO } from "date-fns";
 import { startTransition, useState } from "react";
@@ -39,6 +45,24 @@ export const Task = ({ task }: TaskProps) => {
 	const toggleActions = () => {
 		setShowActions(!showActions);
 		setShowPostponeActions(false);
+	};
+
+	const handlePostpone = (days: number) => {
+		setShowPostponeActions(false);
+		setShowActions(false);
+		startTransition(async () => {
+			updateOptimisticUpcomingTasks({
+				type: "update",
+				task: {
+					...task,
+					deadlineDate: addDays(task.deadlineDate, days).toISOString(),
+				},
+			});
+			await postponeTaskAction(
+				task.id,
+				addDays(task.deadlineDate, days).toISOString(),
+			);
+		});
 	};
 
 	return (
@@ -86,9 +110,20 @@ export const Task = ({ task }: TaskProps) => {
 							</h3>
 
 							{task.status !== "completed" && (
-								<span className="text-xs text-gray-500 whitespace-nowrap">
-									{`due ${formattedDeadlineDate}`}
-								</span>
+								<div className="flex items-center gap-2">
+									<span className="text-xs text-gray-500 whitespace-nowrap">
+										{task.type === "deadline" ? (
+											<ExclamationCircleIcon className="w-4 h-4 text-error" />
+										) : task.type === "recurring" ? (
+											<ArrowPathIcon className="w-4 h-4 text-neutral-content" />
+										) : (
+											<CalendarIcon className="w-4 h-4 text-neutral-content" />
+										)}
+									</span>
+									<span className="text-xs text-gray-500 whitespace-nowrap">
+										{`due ${formattedDeadlineDate}`}
+									</span>
+								</div>
 							)}
 						</div>
 					</div>
@@ -108,78 +143,9 @@ export const Task = ({ task }: TaskProps) => {
 
 			{showPostponeActions && (
 				<div className="absolute right-0 top-1/2 -translate-y-1/2 flex justify-center gap-3 bg-base-300 rounded-md shadow-md z-10 animate-fadeIn">
-					<button
-						className="bg-secondary text-secondary-content w-8 h-8 rounded-full cursor-pointer flex items-center justify-center gap-2"
-						type="button"
-						onClick={(e) => {
-							e.stopPropagation();
-							setShowPostponeActions(false);
-							setShowActions(false);
-							startTransition(async () => {
-								updateOptimisticUpcomingTasks({
-									type: "update",
-									task: {
-										...task,
-										deadlineDate: addDays(task.deadlineDate, 1).toISOString(),
-									},
-								});
-								await postponeTaskAction(
-									task.id,
-									addDays(task.deadlineDate, 1).toISOString(),
-								);
-							});
-						}}
-					>
-						1d
-					</button>
-					<button
-						className="bg-secondary text-secondary-content w-8 h-8 rounded-full cursor-pointer flex items-center justify-center gap-2"
-						type="button"
-						onClick={(e) => {
-							e.stopPropagation();
-							setShowPostponeActions(false);
-							setShowActions(false);
-							startTransition(async () => {
-								updateOptimisticUpcomingTasks({
-									type: "update",
-									task: {
-										...task,
-										deadlineDate: addDays(task.deadlineDate, 5).toISOString(),
-									},
-								});
-								await postponeTaskAction(
-									task.id,
-									addDays(task.deadlineDate, 5).toISOString(),
-								);
-							});
-						}}
-					>
-						5d
-					</button>
-					<button
-						className="bg-secondary text-secondary-content w-8 h-8 rounded-full cursor-pointer flex items-center justify-center gap-2"
-						type="button"
-						onClick={(e) => {
-							e.stopPropagation();
-							setShowPostponeActions(false);
-							setShowActions(false);
-							startTransition(async () => {
-								updateOptimisticUpcomingTasks({
-									type: "update",
-									task: {
-										...task,
-										deadlineDate: addDays(task.deadlineDate, 7).toISOString(),
-									},
-								});
-								await postponeTaskAction(
-									task.id,
-									addDays(task.deadlineDate, 7).toISOString(),
-								);
-							});
-						}}
-					>
-						1w
-					</button>
+					<PostponeButton days={1} onClick={() => handlePostpone(1)} />
+					<PostponeButton days={5} onClick={() => handlePostpone(5)} />
+					<PostponeButton days={7} onClick={() => handlePostpone(7)} />
 				</div>
 			)}
 			{task.status !== "completed" && showActions && !showPostponeActions && (
@@ -199,16 +165,14 @@ export const Task = ({ task }: TaskProps) => {
 						type="button"
 						onClick={(e) => {
 							e.stopPropagation();
-							deleteTaskAction(task.id);
-							startTransition(() => {
+							setShowActions(false);
+							startTransition(async () => {
 								updateOptimisticUpcomingTasks({
 									type: "delete",
-									task: {
-										...task,
-									},
+									task,
 								});
+								await deleteTaskAction(task.id);
 							});
-							setShowActions(false);
 						}}
 					>
 						<TrashIcon className="w-4 h-4 text-error-content group-hover:scale-110 transition-all" />
@@ -222,10 +186,7 @@ export const Task = ({ task }: TaskProps) => {
 							startTransition(async () => {
 								updateOptimisticUpcomingTasks({
 									type: "delete",
-									task: {
-										...task,
-										status: "completed",
-									},
+									task,
 								});
 								updateOptimisticCompletedTasks({
 									type: "set",
@@ -235,7 +196,6 @@ export const Task = ({ task }: TaskProps) => {
 										...optimisticCompletedTasks.slice(0, -1),
 									],
 								});
-
 								await completeTaskAction(task.id);
 							});
 						}}
@@ -245,5 +205,23 @@ export const Task = ({ task }: TaskProps) => {
 				</div>
 			)}
 		</div>
+	);
+};
+
+const PostponeButton = ({
+	days,
+	onClick,
+}: { days: number; onClick: () => void }) => {
+	return (
+		<button
+			type="button"
+			className="bg-secondary text-secondary-content w-8 h-8 rounded-full cursor-pointer flex items-center justify-center gap-2"
+			onClick={(e) => {
+				e.stopPropagation();
+				onClick();
+			}}
+		>
+			{days}d
+		</button>
 	);
 };

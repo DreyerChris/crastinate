@@ -31,7 +31,6 @@ export default function SegmentedControl<T extends string>({
 			className={clsx("relative flex rounded-lg p-1 bg-base-200", className)}
 			role="radiogroup"
 		>
-			{/* Background highlight */}
 			<div
 				className={clsx(
 					"absolute h-[calc(100%-8px)] top-1 transition-all duration-200 rounded-md bg-base-100 shadow-sm mx-2",
