@@ -27,7 +27,7 @@ export const Task = ({ task }: TaskProps) => {
 	const deadlineDate = parseISO(task.deadlineDate);
 	const now = new Date();
 
-	const daysFromNow = Math.floor(
+	const daysFromNow = Math.ceil(
 		(deadlineDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
 	);
 
@@ -36,7 +36,10 @@ export const Task = ({ task }: TaskProps) => {
 		? format(parseISO(task.completedDate), "MMM d, yyyy")
 		: "";
 
-	const toggleActions = () => setShowActions(!showActions);
+	const toggleActions = () => {
+		setShowActions(!showActions);
+		setShowPostponeActions(false);
+	};
 
 	return (
 		<div className="relative">
@@ -47,7 +50,7 @@ export const Task = ({ task }: TaskProps) => {
 						? "border-success border-[1px] border-l-6"
 						: daysFromNow > 2
 							? "border-l-6 border-success"
-							: daysFromNow <= 2 && daysFromNow > -2
+							: daysFromNow <= 2 && daysFromNow >= 0
 								? "border-l-6 border-warning"
 								: "border-l-6 border-error",
 				)}
@@ -62,7 +65,7 @@ export const Task = ({ task }: TaskProps) => {
 								"text-lg font-bold min-w-6 text-center",
 								daysFromNow > 2
 									? "text-success"
-									: daysFromNow <= 2 && daysFromNow > -2
+									: daysFromNow <= 2 && daysFromNow >= 0
 										? "text-warning"
 										: "text-error",
 							)}
@@ -106,7 +109,7 @@ export const Task = ({ task }: TaskProps) => {
 			{showPostponeActions && (
 				<div className="absolute right-0 top-1/2 -translate-y-1/2 flex justify-center gap-3 bg-base-300 rounded-md shadow-md z-10 animate-fadeIn">
 					<button
-						className="bg-warning text-warning-content w-8 h-8 rounded-full cursor-pointer flex items-center justify-center gap-2"
+						className="bg-secondary text-secondary-content w-8 h-8 rounded-full cursor-pointer flex items-center justify-center gap-2"
 						type="button"
 						onClick={(e) => {
 							e.stopPropagation();
@@ -130,7 +133,7 @@ export const Task = ({ task }: TaskProps) => {
 						1d
 					</button>
 					<button
-						className="bg-warning text-warning-content w-8 h-8 rounded-full cursor-pointer flex items-center justify-center gap-2"
+						className="bg-secondary text-secondary-content w-8 h-8 rounded-full cursor-pointer flex items-center justify-center gap-2"
 						type="button"
 						onClick={(e) => {
 							e.stopPropagation();
@@ -154,7 +157,7 @@ export const Task = ({ task }: TaskProps) => {
 						5d
 					</button>
 					<button
-						className="bg-warning text-warning-content w-8 h-8 rounded-full cursor-pointer flex items-center justify-center gap-2"
+						className="bg-secondary text-secondary-content w-8 h-8 rounded-full cursor-pointer flex items-center justify-center gap-2"
 						type="button"
 						onClick={(e) => {
 							e.stopPropagation();
