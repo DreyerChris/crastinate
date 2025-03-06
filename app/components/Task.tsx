@@ -124,18 +124,18 @@ export const Task = ({ task }: TaskProps) => {
 								</span>
 							</div>
 						)}
-					</div>
 
-					{task.status === "completed" && (
-						<div className="text-xs text-success ml-auto">
-							{formattedCompletedDate}
-						</div>
-					)}
-					{task.status === "completed" && (
-						<div className="flex gap-2 items-center">
-							<CheckIcon className="w-4 h-4 text-success" />
-						</div>
-					)}
+						{task.status === "completed" && (
+							<div className="text-xs text-success ml-auto">
+								{formattedCompletedDate}
+							</div>
+						)}
+						{task.status === "completed" && (
+							<div className="flex gap-2 items-center">
+								<CheckIcon className="w-4 h-4 text-success" />
+							</div>
+						)}
+					</div>
 				</div>
 			</button>
 
