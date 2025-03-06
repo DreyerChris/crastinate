@@ -9,7 +9,7 @@ type DatePickerProps = {
 };
 
 export default function DatePicker({ id, required = true }: DatePickerProps) {
-	const [date, setDate] = useState<Date | undefined>();
+	const [date, setDate] = useState<Date | undefined>(new Date());
 	const [isOpen, setIsOpen] = useState(false);
 
 	// Convert date to UTC ISO string for form submission

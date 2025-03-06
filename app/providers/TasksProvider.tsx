@@ -5,9 +5,17 @@ import type { tasksTable } from "../db/schema";
 
 type TasksContextType = {
 	optimisticUpcomingTasks: (typeof tasksTable.$inferSelect)[];
-	addOptimisticUpcomingTask: (_task: typeof tasksTable.$inferSelect) => void;
+	updateOptimisticUpcomingTasks: (action: {
+		type: "add" | "delete" | "update" | "set";
+		task: typeof tasksTable.$inferSelect;
+		newState?: (typeof tasksTable.$inferSelect)[];
+	}) => void;
 	optimisticCompletedTasks: (typeof tasksTable.$inferSelect)[];
-	addOptimisticCompletedTask: (_task: typeof tasksTable.$inferSelect) => void;
+	updateOptimisticCompletedTasks: (action: {
+		type: "add" | "delete" | "update" | "set";
+		task: typeof tasksTable.$inferSelect;
+		newState?: (typeof tasksTable.$inferSelect)[];
+	}) => void;
 };
 
 export const TasksContext = createContext<TasksContextType | undefined>(
@@ -23,32 +31,73 @@ export default function TasksProvider({
 	upcomingTasks: (typeof tasksTable.$inferSelect)[];
 	completedTasks: (typeof tasksTable.$inferSelect)[];
 }) {
-	const [optimisticUpcomingTasks, addOptimisticUpcomingTask] = useOptimistic(
-		upcomingTasks,
-		(
-			state: (typeof tasksTable.$inferSelect)[],
-			newTask: typeof tasksTable.$inferSelect,
-		) => {
-			return [...state, newTask];
-		},
-	);
-	const [optimisticCompletedTasks, addOptimisticCompletedTask] = useOptimistic(
-		completedTasks,
-		(
-			state: (typeof tasksTable.$inferSelect)[],
-			newTask: typeof tasksTable.$inferSelect,
-		) => {
-			return [...state, newTask];
-		},
-	);
+	const [optimisticUpcomingTasks, updateOptimisticUpcomingTasks] =
+		useOptimistic(
+			upcomingTasks,
+			(
+				state: (typeof tasksTable.$inferSelect)[],
+				{
+					type,
+					task,
+					newState,
+				}: {
+					type: "add" | "delete" | "update" | "set";
+					task: typeof tasksTable.$inferSelect;
+					newState?: (typeof tasksTable.$inferSelect)[];
+				},
+			) => {
+				switch (type) {
+					case "add":
+						if (!task) return state;
+						return [...state, task];
+					case "delete":
+						return state.filter((t) => t.id !== task.id);
+					case "update":
+						return state.map((t) => (t.id === task.id ? task : t));
+					case "set":
+						return newState ?? state;
+					default:
+						return state;
+				}
+			},
+		);
+	const [optimisticCompletedTasks, updateOptimisticCompletedTasks] =
+		useOptimistic(
+			completedTasks,
+			(
+				state: (typeof tasksTable.$inferSelect)[],
+				{
+					type,
+					task,
+					newState,
+				}: {
+					type: "add" | "delete" | "update" | "set";
+					task: typeof tasksTable.$inferSelect;
+					newState?: (typeof tasksTable.$inferSelect)[];
+				},
+			) => {
+				switch (type) {
+					case "add":
+						return [...state, task];
+					case "delete":
+						return state.filter((t) => t.id !== task.id);
+					case "update":
+						return state.map((t) => (t.id === task.id ? task : t));
+					case "set":
+						return newState ?? state;
+					default:
+						return state;
+				}
+			},
+		);
 
 	return (
 		<TasksContext.Provider
 			value={{
 				optimisticUpcomingTasks,
-				addOptimisticUpcomingTask,
+				updateOptimisticUpcomingTasks,
 				optimisticCompletedTasks,
-				addOptimisticCompletedTask,
+				updateOptimisticCompletedTasks,
 			}}
 		>
 			{children}

@@ -103,11 +103,10 @@ export const addTaskAction = async (formData: FormData) => {
 		};
 
 		await MUTATIONS.createTask(task);
+		revalidatePath("/");
 	} else {
 		throw new Error("Invalid task data");
 	}
-
-	revalidatePath("/");
 };
 
 export const deleteTaskAction = async (taskId: number) => {
@@ -130,9 +129,23 @@ export const completeTaskAction = async (taskId: number) => {
 		return;
 	}
 
-	// Use current time in UTC format
 	const completedDate = new Date().toISOString();
 
 	await MUTATIONS.completeTask(taskId, completedDate);
+	revalidatePath("/");
+};
+
+export const postponeTaskAction = async (
+	taskId: number,
+	deadlineDate: string,
+) => {
+	const { userId } = await auth();
+	const task = await QUERIES.getTaskById(taskId);
+
+	if (!userId || task.userId !== userId) {
+		return;
+	}
+
+	await MUTATIONS.postponeTask(taskId, deadlineDate);
 	revalidatePath("/");
 };

@@ -1,5 +1,5 @@
 import { addDays } from "date-fns";
-import { and, asc, eq, lte, or } from "drizzle-orm";
+import { and, asc, desc, eq, lte, or } from "drizzle-orm";
 import { db } from ".";
 import { tasksTable } from "./schema";
 
@@ -30,6 +30,7 @@ export const QUERIES = {
 			.where(
 				and(eq(tasksTable.userId, userId), eq(tasksTable.status, "completed")),
 			)
+			.orderBy(desc(tasksTable.completedDate))
 			.limit(3);
 		return tasks;
 	},
@@ -60,6 +61,12 @@ export const MUTATIONS = {
 		await db
 			.update(tasksTable)
 			.set({ status: "completed", completedDate })
+			.where(eq(tasksTable.id, taskId));
+	},
+	postponeTask: async (taskId: number, deadlineDate: string) => {
+		await db
+			.update(tasksTable)
+			.set({ deadlineDate })
 			.where(eq(tasksTable.id, taskId));
 	},
 };

@@ -65,7 +65,7 @@ export default async function Home({
 						</div>
 					</div>
 
-					<AddTask />
+					<AddTask daysFilter={days.toString() as "5" | "15" | "30"} />
 				</div>
 			</div>
 		</TasksProvider>

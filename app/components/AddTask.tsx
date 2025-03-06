@@ -1,27 +1,39 @@
 "use client";
 
+import { addDays } from "date-fns";
 import { addTaskAction } from "../actions";
 import { useTasks } from "../providers/TasksProvider";
 import TaskType from "./TaskType";
 
-export const AddTask = () => {
-	const { addOptimisticUpcomingTask } = useTasks();
+type AddTaskProps = {
+	daysFilter: "5" | "15" | "30";
+};
+
+export const AddTask = ({ daysFilter }: AddTaskProps) => {
+	const { optimisticUpcomingTasks, updateOptimisticUpcomingTasks } = useTasks();
 
 	const formAction = async (formData: FormData) => {
 		const title = formData.get("title") as string;
 		const taskType = formData.get("taskType") as string;
 		const deadlineDate = formData.get("deadlineDate") as string;
 
-		addOptimisticUpcomingTask({
-			title,
-			description: null,
-			type: taskType as "recurring" | "deadline" | "one-off",
-			deadlineDate: deadlineDate ?? "",
-			status: "pending",
-			completedDate: null,
-			id: 0,
-			userId: "",
-		});
+		if (
+			new Date(deadlineDate) < addDays(new Date(), Number.parseInt(daysFilter))
+		) {
+			updateOptimisticUpcomingTasks({
+				type: "add",
+				task: {
+					title,
+					description: null,
+					type: taskType as "recurring" | "deadline" | "one-off",
+					deadlineDate: deadlineDate ?? "",
+					status: "pending",
+					completedDate: null,
+					id: 0,
+					userId: "",
+				},
+			});
+		}
 		addTaskAction(formData);
 	};
 
@@ -40,7 +52,7 @@ export const AddTask = () => {
 					<h3 className="font-bold text-lg">Add a new task</h3>
 					<div className="modal-body">
 						<form
-							action={addTaskAction}
+							action={formAction}
 							className="flex flex-col gap-4 mt-6 w-full"
 						>
 							<fieldset className="fieldset">

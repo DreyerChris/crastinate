@@ -1,17 +1,28 @@
 "use client";
 import { CalendarIcon, CheckIcon, TrashIcon } from "@heroicons/react/16/solid";
 import clsx from "clsx";
-import { format, parseISO } from "date-fns";
-import { useState } from "react";
-import { completeTaskAction, deleteTaskAction } from "../actions";
+import { addDays, format, parseISO } from "date-fns";
+import { startTransition, useState } from "react";
+import {
+	completeTaskAction,
+	deleteTaskAction,
+	postponeTaskAction,
+} from "../actions";
 import type { tasksTable } from "../db/schema";
+import { useTasks } from "../providers/TasksProvider";
 
 type TaskProps = {
 	task: typeof tasksTable.$inferSelect;
 };
 
 export const Task = ({ task }: TaskProps) => {
+	const {
+		updateOptimisticUpcomingTasks,
+		updateOptimisticCompletedTasks,
+		optimisticCompletedTasks,
+	} = useTasks();
 	const [showActions, setShowActions] = useState(false);
+	const [showPostponeActions, setShowPostponeActions] = useState(false);
 
 	const deadlineDate = parseISO(task.deadlineDate);
 	const now = new Date();
@@ -92,15 +103,90 @@ export const Task = ({ task }: TaskProps) => {
 				</div>
 			</button>
 
-			{task.status !== "completed" && showActions && (
+			{showPostponeActions && (
+				<div className="absolute right-0 top-1/2 -translate-y-1/2 flex justify-center gap-3 bg-base-300 rounded-md shadow-md z-10 animate-fadeIn">
+					<button
+						className="bg-warning text-warning-content w-8 h-8 rounded-full cursor-pointer flex items-center justify-center gap-2"
+						type="button"
+						onClick={(e) => {
+							e.stopPropagation();
+							setShowPostponeActions(false);
+							setShowActions(false);
+							startTransition(async () => {
+								updateOptimisticUpcomingTasks({
+									type: "update",
+									task: {
+										...task,
+										deadlineDate: addDays(task.deadlineDate, 1).toISOString(),
+									},
+								});
+								await postponeTaskAction(
+									task.id,
+									addDays(task.deadlineDate, 1).toISOString(),
+								);
+							});
+						}}
+					>
+						1d
+					</button>
+					<button
+						className="bg-warning text-warning-content w-8 h-8 rounded-full cursor-pointer flex items-center justify-center gap-2"
+						type="button"
+						onClick={(e) => {
+							e.stopPropagation();
+							setShowPostponeActions(false);
+							setShowActions(false);
+							startTransition(async () => {
+								updateOptimisticUpcomingTasks({
+									type: "update",
+									task: {
+										...task,
+										deadlineDate: addDays(task.deadlineDate, 5).toISOString(),
+									},
+								});
+								await postponeTaskAction(
+									task.id,
+									addDays(task.deadlineDate, 5).toISOString(),
+								);
+							});
+						}}
+					>
+						5d
+					</button>
+					<button
+						className="bg-warning text-warning-content w-8 h-8 rounded-full cursor-pointer flex items-center justify-center gap-2"
+						type="button"
+						onClick={(e) => {
+							e.stopPropagation();
+							setShowPostponeActions(false);
+							setShowActions(false);
+							startTransition(async () => {
+								updateOptimisticUpcomingTasks({
+									type: "update",
+									task: {
+										...task,
+										deadlineDate: addDays(task.deadlineDate, 7).toISOString(),
+									},
+								});
+								await postponeTaskAction(
+									task.id,
+									addDays(task.deadlineDate, 7).toISOString(),
+								);
+							});
+						}}
+					>
+						1w
+					</button>
+				</div>
+			)}
+			{task.status !== "completed" && showActions && !showPostponeActions && (
 				<div className="absolute right-0 top-1/2 -translate-y-1/2 flex justify-center gap-3 bg-base-300 pr-2 rounded-md shadow-md z-10 animate-fadeIn">
 					<button
 						className="bg-warning p-2 rounded-full group cursor-pointer flex items-center gap-2"
 						type="button"
 						onClick={(e) => {
 							e.stopPropagation();
-							deleteTaskAction(task.id);
-							setShowActions(false);
+							setShowPostponeActions(true);
 						}}
 					>
 						<CalendarIcon className="w-4 h-4 text-warning-content group-hover:scale-110 transition-all" />
@@ -111,6 +197,14 @@ export const Task = ({ task }: TaskProps) => {
 						onClick={(e) => {
 							e.stopPropagation();
 							deleteTaskAction(task.id);
+							startTransition(() => {
+								updateOptimisticUpcomingTasks({
+									type: "delete",
+									task: {
+										...task,
+									},
+								});
+							});
 							setShowActions(false);
 						}}
 					>
@@ -121,8 +215,26 @@ export const Task = ({ task }: TaskProps) => {
 						type="button"
 						onClick={(e) => {
 							e.stopPropagation();
-							completeTaskAction(task.id);
 							setShowActions(false);
+							startTransition(async () => {
+								updateOptimisticUpcomingTasks({
+									type: "delete",
+									task: {
+										...task,
+										status: "completed",
+									},
+								});
+								updateOptimisticCompletedTasks({
+									type: "set",
+									task,
+									newState: [
+										{ ...task, status: "completed" },
+										...optimisticCompletedTasks.slice(0, -1),
+									],
+								});
+
+								await completeTaskAction(task.id);
+							});
 						}}
 					>
 						<CheckIcon className="w-4 h-4 text-success-content group-hover:scale-110 transition-all" />
