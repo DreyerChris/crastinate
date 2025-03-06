@@ -101,7 +101,7 @@ export const Task = ({ task }: TaskProps) => {
 					<div className="flex items-center justify-between gap-2 w-full pr-1">
 						<h3
 							className={clsx(
-								"text-base-content font-medium truncate flex-1",
+								"text-base-content font-medium truncate",
 								task.status === "completed" && "text-success",
 							)}
 						>

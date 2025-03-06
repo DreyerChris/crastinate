@@ -10,6 +10,7 @@ import {
 	UserButton,
 } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { cookies } from "next/headers";
 import Background from "./components/Background";
 
