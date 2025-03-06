@@ -110,9 +110,16 @@ export const Task = ({ task }: TaskProps) => {
 
 						{task.status !== "completed" && (
 							<div className="flex items-center gap-2">
-								<span className="text-xs text-gray-500 whitespace-nowrap">
+								<span className="text-xs whitespace-nowrap">
 									{task.type === "deadline" ? (
-										<ExclamationCircleIcon className="w-4 h-4 text-error" />
+										<ExclamationCircleIcon
+											className={clsx(
+												"w-4 h-4",
+												daysFromNow <= 2
+													? "text-error"
+													: "text-neutral-content",
+											)}
+										/>
 									) : task.type === "recurring" ? (
 										<ArrowPathIcon className="w-4 h-4 text-neutral-content" />
 									) : (
