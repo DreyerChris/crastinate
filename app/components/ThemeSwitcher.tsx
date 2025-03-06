@@ -20,74 +20,106 @@ export default function ThemeSwitcher() {
 	};
 
 	return (
-		<div className="absolute bottom-6 right-6 z-100">
-			<button
-				type="button"
-				className="btn btn-square btn-secondary"
-				onClick={() => setThemeMenuOpen(!themeMenuOpen)}
-			>
-				<PaintBrushIcon className="w-5 h-5" />
-			</button>
+		<>
 			{themeMenuOpen && (
-				<div className="relative">
-					<div className="absolute bottom-0 right-0">
-						<div className="bg-base-100 rounded-lg shadow-lg">
-							<div className="flex flex-col gap-2 items-end">
-								<ThemeButton
-									theme="dark"
-									onClick={() => handleThemeChange("dark")}
-								/>
-								<ThemeButton
-									theme="sunset"
-									onClick={() => handleThemeChange("sunset")}
-								/>
-								<ThemeButton
-									theme="synthwave"
-									onClick={() => handleThemeChange("synthwave")}
-								/>
-								<ThemeButton
-									theme="forest"
-									onClick={() => handleThemeChange("forest")}
-								/>
-								<ThemeButton
-									theme="dracula"
-									onClick={() => handleThemeChange("dracula")}
-								/>
-								<ThemeButton
-									theme="dim"
-									onClick={() => handleThemeChange("dim")}
-								/>
-								<ThemeButton
-									theme="night"
-									onClick={() => handleThemeChange("night")}
-								/>
-								<ThemeButton
-									theme="abyss"
-									onClick={() => handleThemeChange("abyss")}
-								/>
-								<ThemeButton
-									theme="business"
-									onClick={() => handleThemeChange("business")}
-								/>
+				<div
+					className="fixed inset-0 z-40"
+					onClick={() => setThemeMenuOpen(false)}
+					onKeyDown={(e) => {
+						if (e.key === "Escape") {
+							setThemeMenuOpen(false);
+						}
+					}}
+					aria-hidden="true"
+				/>
+			)}
+
+			<div className="absolute bottom-6 right-6 z-50">
+				<button
+					type="button"
+					className="btn btn-square btn-secondary"
+					onClick={() => setThemeMenuOpen(!themeMenuOpen)}
+					aria-label="Change theme"
+					aria-expanded={themeMenuOpen}
+				>
+					<PaintBrushIcon className="w-5 h-5" />
+				</button>
+				{themeMenuOpen && (
+					<div className="relative">
+						<div className="absolute bottom-12 right-0">
+							<div className="bg-base-100 rounded-lg shadow-lg">
+								<div className="flex flex-col gap-2 items-end py-2">
+									<ThemeButton
+										theme="dark"
+										onClick={() => handleThemeChange("dark")}
+										isActive={theme === "dark"}
+									/>
+									<ThemeButton
+										theme="sunset"
+										onClick={() => handleThemeChange("sunset")}
+										isActive={theme === "sunset"}
+									/>
+									<ThemeButton
+										theme="synthwave"
+										onClick={() => handleThemeChange("synthwave")}
+										isActive={theme === "synthwave"}
+									/>
+									<ThemeButton
+										theme="forest"
+										onClick={() => handleThemeChange("forest")}
+										isActive={theme === "forest"}
+									/>
+									<ThemeButton
+										theme="dracula"
+										onClick={() => handleThemeChange("dracula")}
+										isActive={theme === "dracula"}
+									/>
+									<ThemeButton
+										theme="dim"
+										onClick={() => handleThemeChange("dim")}
+										isActive={theme === "dim"}
+									/>
+									<ThemeButton
+										theme="night"
+										onClick={() => handleThemeChange("night")}
+										isActive={theme === "night"}
+									/>
+									<ThemeButton
+										theme="abyss"
+										onClick={() => handleThemeChange("abyss")}
+										isActive={theme === "abyss"}
+									/>
+									<ThemeButton
+										theme="business"
+										onClick={() => handleThemeChange("business")}
+										isActive={theme === "business"}
+									/>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			)}
-		</div>
+				)}
+			</div>
+		</>
 	);
 }
 
 const ThemeButton = ({
 	theme,
 	onClick,
-}: { theme: string; onClick: () => void }) => {
+	isActive = false,
+}: {
+	theme: string;
+	onClick: () => void;
+	isActive?: boolean;
+}) => {
 	return (
 		<button
 			data-theme={theme}
 			type="button"
-			className="btn btn-sm btn-ghost"
+			className={`btn btn-sm ${isActive ? "btn-active" : "btn-ghost"}`}
 			onClick={onClick}
+			aria-pressed={isActive}
 		>
 			{theme}
 			<div className="w-4 h-4 bg-primary rounded" />
