@@ -85,14 +85,19 @@ export default function ThemeSwitcher() {
 										isActive={theme === "night"}
 									/>
 									<ThemeButton
-										theme="abyss"
-										onClick={() => handleThemeChange("abyss")}
-										isActive={theme === "abyss"}
+										theme="coffee"
+										onClick={() => handleThemeChange("coffee")}
+										isActive={theme === "coffee"}
 									/>
 									<ThemeButton
 										theme="business"
 										onClick={() => handleThemeChange("business")}
 										isActive={theme === "business"}
+									/>
+									<ThemeButton
+										theme="black"
+										onClick={() => handleThemeChange("black")}
+										isActive={theme === "black"}
 									/>
 								</div>
 							</div>

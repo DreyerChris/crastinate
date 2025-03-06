@@ -3,3 +3,23 @@
 @plugin "daisyui" {
     themes: all;
 }
+
+@layer utilities {
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .animate-gradient {
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary), var(--color-accent),var(--color-secondary), var(--color-primary));
+    background-size: 200% 200%;
+    animation: gradient 5s ease infinite;
+  }
+}

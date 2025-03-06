@@ -69,7 +69,7 @@ export const Task = ({ task }: TaskProps) => {
 		<div className="relative">
 			<button
 				className={clsx(
-					"card bg-base-300 shadow-sm w-full text-left rounded-lg",
+					"card bg-base-200 shadow-sm w-full text-left rounded-lg",
 					task.status === "completed"
 						? "border-success border-[1px] border-l-6"
 						: daysFromNow > 2
@@ -109,7 +109,7 @@ export const Task = ({ task }: TaskProps) => {
 						</h3>
 
 						{task.status !== "completed" && (
-							<div className="flex items-center gap-2">
+							<div className="ml-auto flex items-center gap-2">
 								<span className="text-xs whitespace-nowrap">
 									{task.type === "deadline" ? (
 										<ExclamationCircleIcon
@@ -133,13 +133,13 @@ export const Task = ({ task }: TaskProps) => {
 						)}
 
 						{task.status === "completed" && (
-							<div className="text-xs text-success ml-auto">
-								{formattedCompletedDate}
-							</div>
-						)}
-						{task.status === "completed" && (
-							<div className="flex gap-2 items-center">
-								<CheckIcon className="w-4 h-4 text-success" />
+							<div className="ml-auto flex items-center gap-2">
+								<div className="text-xs text-success ml-auto">
+									{formattedCompletedDate}
+								</div>
+								<div className="flex gap-2 items-center">
+									<CheckIcon className="w-4 h-4 text-success" />
+								</div>
 							</div>
 						)}
 					</div>
@@ -147,14 +147,14 @@ export const Task = ({ task }: TaskProps) => {
 			</button>
 
 			{showPostponeActions && (
-				<div className="absolute right-0 top-1/2 -translate-y-1/2 flex justify-center gap-3 bg-base-300 rounded-md shadow-md z-10 animate-fadeIn">
+				<div className="absolute right-0 top-1/2 -translate-y-1/2 flex justify-center gap-3 bg-base-200 rounded-md shadow-md z-10 animate-fadeIn">
 					<PostponeButton days={1} onClick={() => handlePostpone(1)} />
 					<PostponeButton days={5} onClick={() => handlePostpone(5)} />
 					<PostponeButton days={7} onClick={() => handlePostpone(7)} />
 				</div>
 			)}
 			{task.status !== "completed" && showActions && !showPostponeActions && (
-				<div className="absolute right-0 top-1/2 -translate-y-1/2 flex justify-center gap-3 bg-base-300 pr-2 rounded-md shadow-md z-10 animate-fadeIn">
+				<div className="absolute right-0 top-1/2 -translate-y-1/2 flex justify-center gap-3 bg-base-200 pr-2 rounded-md shadow-md z-10 animate-fadeIn">
 					<button
 						className="bg-warning p-2 rounded-full group cursor-pointer flex items-center gap-2"
 						type="button"
