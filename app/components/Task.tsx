@@ -99,7 +99,7 @@ export const Task = ({ task }: TaskProps) => {
 					)}
 
 					<div className="flex-1 min-w-0 pr-1">
-						<div className="flex items-baseline gap-2">
+						<div className="flex items-center justify-between gap-2">
 							<h3
 								className={clsx(
 									"text-base-content font-medium truncate flex-1",
