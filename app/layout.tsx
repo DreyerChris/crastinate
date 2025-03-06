@@ -39,6 +39,7 @@ export default async function RootLayout({
 	return (
 		<ClerkProvider appearance={{ baseTheme: dark }}>
 			<html lang="en" data-theme={theme} className="w-full h-full dark">
+				<SpeedInsights />
 				<head>
 					<meta
 						name="viewport"
