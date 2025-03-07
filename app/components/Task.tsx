@@ -66,16 +66,14 @@ export const Task = ({ task }: TaskProps) => {
 	};
 
 	return (
-		<div className="relative">
+		<div className="relative w-full">
 			<button
-				className={clsx(
-					"card bg-base-200 shadow-sm w-full text-left rounded-lg",
-				)}
+				className={clsx("bg-base-200 shadow-sm w-full text-left rounded-lg")}
 				onClick={toggleActions}
 				aria-expanded={showActions}
 				type="button"
 			>
-				<div className="p-2 flex flex-row items-center justify-between gap-2 text-sm">
+				<div className="p-2 flex items-center justify-between gap-2 text-sm w-full">
 					<div className="flex flex-col items-start justify-between gap-2 flex-1">
 						<h3
 							className={clsx(
