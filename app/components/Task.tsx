@@ -70,35 +70,13 @@ export const Task = ({ task }: TaskProps) => {
 			<button
 				className={clsx(
 					"card bg-base-200 shadow-sm w-full text-left rounded-lg",
-					task.status === "completed"
-						? "border-success border-[1px] border-l-6"
-						: daysFromNow > 2
-							? "border-l-6 border-success"
-							: daysFromNow <= 2 && daysFromNow >= 0
-								? "border-l-6 border-warning"
-								: "border-l-6 border-error",
 				)}
 				onClick={toggleActions}
 				aria-expanded={showActions}
 				type="button"
 			>
 				<div className="card-body p-2 flex-row items-center gap-2">
-					{task.status !== "completed" && (
-						<span
-							className={clsx(
-								"text-lg font-bold min-w-6 text-center",
-								daysFromNow > 2
-									? "text-success"
-									: daysFromNow <= 2 && daysFromNow >= 0
-										? "text-warning"
-										: "text-error",
-							)}
-						>
-							{`${daysFromNow > 0 ? "-" : daysFromNow >= -1 && daysFromNow <= 0 ? "" : "+"}${Math.abs(daysFromNow)}d`}
-						</span>
-					)}
-
-					<div className="flex items-center justify-between gap-2 w-full pr-1">
+					<div className="flex flex-col items-start justify-between gap-2 w-full pr-1">
 						<h3
 							className={clsx(
 								"text-base-content font-medium truncate",
@@ -109,7 +87,7 @@ export const Task = ({ task }: TaskProps) => {
 						</h3>
 
 						{task.status !== "completed" && (
-							<div className="ml-auto flex items-center gap-2">
+							<div className="flex items-center gap-2">
 								<span className="text-xs whitespace-nowrap">
 									{task.type === "deadline" ? (
 										<ExclamationCircleIcon
@@ -133,16 +111,31 @@ export const Task = ({ task }: TaskProps) => {
 						)}
 
 						{task.status === "completed" && (
-							<div className="ml-auto flex items-center gap-2">
-								<div className="text-xs text-success ml-auto">
-									{formattedCompletedDate}
-								</div>
+							<div className="flex items-center gap-2">
 								<div className="flex gap-2 items-center">
 									<CheckIcon className="w-4 h-4 text-success" />
+								</div>
+
+								<div className="text-xs text-success ml-auto">
+									{formattedCompletedDate}
 								</div>
 							</div>
 						)}
 					</div>
+					{task.status !== "completed" && (
+						<div
+							className={clsx(
+								"badge badge-soft",
+								daysFromNow > 2
+									? "badge-success"
+									: daysFromNow <= 2 && daysFromNow >= 0
+										? "badge-warning"
+										: "badge-error",
+							)}
+						>
+							{`${daysFromNow}d`}
+						</div>
+					)}
 				</div>
 			</button>
 

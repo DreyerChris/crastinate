@@ -13,7 +13,7 @@ export default async function Home({
 	searchParams: Promise<{ days: string }>;
 }) {
 	const { userId } = await auth();
-	const days = Number.parseInt((await searchParams).days ?? "5");
+	const days = Number.parseInt((await searchParams).days ?? "7");
 
 	if (!userId) {
 		return <div>Sign in to view this page</div>;
@@ -30,10 +30,10 @@ export default async function Home({
 			<div className="relative flex flex-col items-center justify-center h-full w-full p-4 bg-gray-900 gap-6">
 				<Background />
 				<ThemeSwitcher />
-				<div className="z-1 relative bg-base-300 px-4 py-8 lg:p-8 flex flex-col justify-center items-center gap-6 rounded-md max-h-full">
-					<div className="absolute w-full h-2 rounded-tr rounded-tl -top-2 animate-gradient" />
+				<div className="z-1 relative bg-base-300 px-4 py-8 lg:p-8 flex flex-col justify-center items-center gap-6 rounded-md max-h-full min-w-1/2">
+					<div className="shadow-md absolute w-full h-2 rounded-tr rounded-tl -top-2 animate-gradient z-1" />
 					<article className="text-center prose z-0">
-						<h1 className="text-white">What will you complete today?</h1>
+						<h1 className="text-white">CRASTINATE</h1>
 					</article>
 					<div className="w-full flex flex-col gap-2 h-9/12 md:10/12">
 						<div className="flex items-center justify-between">
@@ -43,9 +43,9 @@ export default async function Home({
 							<SegmentedControl
 								value={days.toString()}
 								options={[
-									{ id: "5", label: "+5d" },
-									{ id: "15", label: "+15d" },
-									{ id: "30", label: "+30d" },
+									{ id: "7", label: "Day" },
+									{ id: "15", label: "Week" },
+									{ id: "30", label: "Month" },
 								]}
 								name="upcoming-filter"
 								onChange={async (value) => {
