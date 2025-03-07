@@ -75,7 +75,7 @@ export const Task = ({ task }: TaskProps) => {
 				aria-expanded={showActions}
 				type="button"
 			>
-				<div className="card-body p-2 flex-row items-center justify-between gap-2">
+				<div className="card-body p-2 flex flex-row items-center justify-between gap-2">
 					<div className="flex flex-col items-start justify-between gap-2">
 						<h3
 							className={clsx(
