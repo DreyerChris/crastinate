@@ -75,8 +75,8 @@ export const Task = ({ task }: TaskProps) => {
 				aria-expanded={showActions}
 				type="button"
 			>
-				<div className="card-body p-2 flex-row items-center gap-2">
-					<div className="flex flex-col items-start justify-between gap-2 w-full pr-1">
+				<div className="card-body p-2 flex-row items-center justify-between gap-2">
+					<div className="flex flex-col items-start justify-between gap-2">
 						<h3
 							className={clsx(
 								"text-base-content font-medium truncate",
@@ -125,7 +125,7 @@ export const Task = ({ task }: TaskProps) => {
 					{task.status !== "completed" && (
 						<div
 							className={clsx(
-								"badge badge-soft",
+								"badge badge-soft rounded-full",
 								daysFromNow > 2
 									? "badge-success"
 									: daysFromNow <= 2 && daysFromNow >= 0
