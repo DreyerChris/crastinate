@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import {
-	ClerkProvider,
-	SignInButton,
-	SignUpButton,
-	SignedIn,
-	SignedOut,
-	UserButton,
-} from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { cookies } from "next/headers";
 import Background from "./components/Background";
+import ClientOnly from "./components/ClientOnly";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -36,6 +30,7 @@ export default async function RootLayout({
 }>) {
 	const cookieStore = await cookies();
 	const theme = cookieStore.get("theme")?.value ?? "dark";
+
 	return (
 		<ClerkProvider appearance={{ baseTheme: dark }}>
 			<html lang="en" data-theme={theme} className="w-full h-full dark">
@@ -50,7 +45,9 @@ export default async function RootLayout({
 				<body
 					className={`${geistSans.variable} ${geistMono.variable} antialiased h-dvh w-full`}
 				>
-					<Background />
+					<ClientOnly>
+						<Background />
+					</ClientOnly>
 					{children}
 				</body>
 			</html>

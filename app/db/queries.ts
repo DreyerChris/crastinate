@@ -31,15 +31,15 @@ export const QUERIES = {
 				and(eq(tasksTable.userId, userId), eq(tasksTable.status, "completed")),
 			)
 			.orderBy(desc(tasksTable.completedDate))
-			.limit(2);
+			.limit(3);
 		return tasks;
 	},
 	getTaskById: async (taskId: number) => {
 		const tasks = await db
 			.select()
 			.from(tasksTable)
-			.limit(1)
-			.where(eq(tasksTable.id, taskId));
+			.where(eq(tasksTable.id, taskId))
+			.limit(1);
 		return tasks[0];
 	},
 };

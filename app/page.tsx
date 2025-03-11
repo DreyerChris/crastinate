@@ -1,7 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { AddTask } from "./components/AddTask";
-import Background from "./components/Background";
 import { TaskList } from "./components/TaskList";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import SegmentedControl from "./components/ui/SegmentedControl";
@@ -19,8 +18,13 @@ export default async function Home({
 		return <div>Sign in to view this page</div>;
 	}
 
-	const upcomingTasks = await QUERIES.getUpcomingTasks(userId ?? "", days);
-	const completedTasks = await QUERIES.getCompletedTasks(userId ?? "");
+	const upcomingTasksPromise = QUERIES.getUpcomingTasks(userId ?? "", days);
+	const completedTasksPromise = QUERIES.getCompletedTasks(userId ?? "");
+
+	const [upcomingTasks, completedTasks] = await Promise.all([
+		upcomingTasksPromise,
+		completedTasksPromise,
+	]);
 
 	return (
 		<TasksProvider
@@ -49,7 +53,6 @@ export default async function Home({
 								name="upcoming-filter"
 								onChange={async (value) => {
 									"use server";
-									console.log(value);
 									redirect(`/?days=${value}`);
 								}}
 							/>
