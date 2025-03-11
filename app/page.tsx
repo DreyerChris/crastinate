@@ -27,15 +27,14 @@ export default async function Home({
 			upcomingTasks={upcomingTasks}
 			completedTasks={completedTasks}
 		>
-			<div className="relative flex flex-col items-center justify-center h-full w-full p-0 py-2 md:p-4 bg-gray-900 gap-6">
-				<Background />
+			<div className="flex flex-col items-center justify-center h-full w-full p-0 py-2 md:p-4 gap-6">
 				<ThemeSwitcher />
-				<div className="z-1 relative bg-base-300 px-4 py-8 lg:p-8 flex flex-col justify-center items-center gap-6 rounded-md max-h-full w-full md:min-w-1/2">
+				<div className="z-1 relative bg-base-300 px-4 py-8 lg:p-8 flex flex-col justify-between items-center gap-6 rounded-md max-h-full w-full md:w-1/2">
 					<div className="shadow-md absolute w-full h-2 rounded-tr rounded-tl -top-2 animate-gradient z-1" />
 					<article className="text-center prose z-0">
 						<h1 className="text-white">CRASTINATE</h1>
 					</article>
-					<div className="w-full flex flex-col gap-2 h-9/12 md:10/12">
+					<div className="w-full flex flex-col gap-2 h-10/12">
 						<div className="flex items-center justify-between">
 							<article className="prose">
 								<h2 className="text-primary">Upcoming</h2>

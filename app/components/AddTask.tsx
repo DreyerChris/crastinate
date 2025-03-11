@@ -16,6 +16,7 @@ export const AddTask = ({ daysFilter }: AddTaskProps) => {
 		const title = formData.get("title") as string;
 		const taskType = formData.get("taskType") as string;
 		const deadlineDate = formData.get("deadlineDate") as string;
+		const recurringStartDate = formData.get("recurringStartDate") as string;
 
 		if (
 			new Date(deadlineDate) < addDays(new Date(), Number.parseInt(daysFilter))
@@ -26,7 +27,7 @@ export const AddTask = ({ daysFilter }: AddTaskProps) => {
 					title,
 					description: null,
 					type: taskType as "recurring" | "deadline" | "one-off",
-					deadlineDate: deadlineDate ?? "",
+					deadlineDate: deadlineDate ?? recurringStartDate,
 					status: "pending",
 					completedDate: null,
 					id: 0,

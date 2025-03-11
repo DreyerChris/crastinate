@@ -1,5 +1,6 @@
 "use client";
 import { useTasks } from "../providers/TasksProvider";
+import CompletedTask from "./CompletedTask";
 import { Task } from "./Task";
 
 type TaskListProps = {
@@ -13,7 +14,7 @@ export const TaskList = ({ completed }: TaskListProps) => {
 		<>
 			{completed
 				? optimisticCompletedTasks.map((task) => (
-						<Task key={task.id} task={task} />
+						<CompletedTask key={task.id} task={task} />
 					))
 				: optimisticUpcomingTasks.map((task) => (
 						<Task key={task.id} task={task} />

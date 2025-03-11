@@ -31,7 +31,7 @@ export const QUERIES = {
 				and(eq(tasksTable.userId, userId), eq(tasksTable.status, "completed")),
 			)
 			.orderBy(desc(tasksTable.completedDate))
-			.limit(3);
+			.limit(2);
 		return tasks;
 	},
 	getTaskById: async (taskId: number) => {

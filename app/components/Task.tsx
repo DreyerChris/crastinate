@@ -32,15 +32,10 @@ export const Task = ({ task }: TaskProps) => {
 
 	const deadlineDate = parseISO(task.deadlineDate);
 	const now = new Date();
-
 	const daysFromNow = Math.ceil(
 		(deadlineDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
 	);
-
 	const formattedDeadlineDate = format(deadlineDate, "MMM d, yyyy");
-	const formattedCompletedDate = task.completedDate
-		? format(parseISO(task.completedDate), "MMM d, yyyy")
-		: "";
 
 	const toggleActions = () => {
 		setShowActions(!showActions);
@@ -68,72 +63,47 @@ export const Task = ({ task }: TaskProps) => {
 	return (
 		<div className="relative w-full">
 			<button
-				className={clsx("bg-base-200 shadow-sm w-full text-left rounded-lg")}
+				className={clsx("bg-base-200 shadow-sm w-full rounded-lg")}
 				onClick={toggleActions}
 				aria-expanded={showActions}
 				type="button"
 			>
 				<div className="p-2 flex items-center justify-between gap-2 text-sm w-full">
-					<div className="flex flex-col items-start justify-between gap-2 flex-1">
-						<h3
-							className={clsx(
-								"text-base-content font-medium truncate",
-								task.status === "completed" && "text-success",
-							)}
-						>
-							{task.title}
-						</h3>
+					<div className="flex flex-col items-start gap-2 flex-1">
+						<h3 className="font-medium">{task.title}</h3>
 
-						{task.status !== "completed" && (
-							<div className="flex items-center gap-2">
-								<span className="text-xs whitespace-nowrap">
-									{task.type === "deadline" ? (
-										<ExclamationCircleIcon
-											className={clsx(
-												"w-4 h-4",
-												daysFromNow <= 2
-													? "text-error"
-													: "text-neutral-content",
-											)}
-										/>
-									) : task.type === "recurring" ? (
-										<ArrowPathIcon className="w-4 h-4 text-neutral-content" />
-									) : (
-										<CalendarIcon className="w-4 h-4 text-neutral-content" />
-									)}
-								</span>
-								<span className="text-xs text-gray-500 whitespace-nowrap">
-									{`due ${formattedDeadlineDate}`}
-								</span>
-							</div>
-						)}
-
-						{task.status === "completed" && (
-							<div className="flex items-center gap-2">
-								<div className="flex gap-2 items-center">
-									<CheckIcon className="w-4 h-4 text-success" />
-								</div>
-
-								<div className="text-xs text-success ml-auto">
-									{formattedCompletedDate}
-								</div>
-							</div>
-						)}
-					</div>
-					{task.status !== "completed" && (
-						<div
-							className={clsx(
-								"badge badge-soft rounded-full",
-								daysFromNow > 2
-									? "badge-success"
-									: daysFromNow <= 2 && daysFromNow >= 0
-										? "badge-warning"
-										: "badge-error",
-							)}
-						>
-							{`${daysFromNow}d`}
+						<div className="flex items-center gap-2">
+							<span className="text-xs whitespace-nowrap">
+								{task.type === "deadline" ? (
+									<ExclamationCircleIcon
+										className={clsx(
+											"w-4 h-4",
+											daysFromNow <= 2 ? "text-error" : "text-neutral-content",
+										)}
+									/>
+								) : task.type === "recurring" ? (
+									<ArrowPathIcon className="w-4 h-4 text-neutral-content" />
+								) : (
+									<CalendarIcon className="w-4 h-4 text-neutral-content" />
+								)}
+							</span>
+							<span className="text-xs text-gray-500 whitespace-nowrap">
+								{`due ${formattedDeadlineDate}`}
+							</span>
 						</div>
-					)}
+					</div>
+					<div
+						className={clsx(
+							"badge badge-soft rounded-full",
+							daysFromNow > 2
+								? "badge-success"
+								: daysFromNow <= 2 && daysFromNow >= 0
+									? "badge-warning"
+									: "badge-error",
+						)}
+					>
+						{`${daysFromNow}d`}
+					</div>
 				</div>
 			</button>
 
@@ -144,7 +114,7 @@ export const Task = ({ task }: TaskProps) => {
 					<PostponeButton days={7} onClick={() => handlePostpone(7)} />
 				</div>
 			)}
-			{task.status !== "completed" && showActions && !showPostponeActions && (
+			{showActions && !showPostponeActions && (
 				<div className="absolute right-0 top-1/2 -translate-y-1/2 flex justify-center gap-3 bg-base-200 pr-2 rounded-md shadow-md z-10 animate-fadeIn">
 					<button
 						className="bg-warning p-2 rounded-full group cursor-pointer flex items-center gap-2"
