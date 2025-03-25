@@ -26,8 +26,10 @@ export const AddTask = ({ daysFilter }: AddTaskProps) => {
 				task: {
 					title,
 					description: null,
-					type: taskType as "recurring" | "deadline" | "one-off",
-					deadlineDate: deadlineDate ?? recurringStartDate,
+					type: taskType as "recurring" | "deadline" | "one-off" | "open",
+					deadlineDate:
+						deadlineDate ??
+						(taskType === "open" ? new Date().toString() : recurringStartDate),
 					status: "pending",
 					completedDate: null,
 					id: 0,

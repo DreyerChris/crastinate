@@ -6,9 +6,14 @@ import { DayPicker } from "react-day-picker";
 type DatePickerProps = {
 	id: string;
 	required?: boolean;
+	hidden?: boolean;
 };
 
-export default function DatePicker({ id, required = true }: DatePickerProps) {
+export default function DatePicker({
+	id,
+	required = true,
+	hidden = false,
+}: DatePickerProps) {
 	const [date, setDate] = useState<Date | undefined>(new Date());
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -54,6 +59,7 @@ export default function DatePicker({ id, required = true }: DatePickerProps) {
 				aria-label="Select date"
 				aria-expanded={isOpen}
 				aria-controls={`${id}-picker`}
+				hidden={hidden}
 			>
 				{formatDateForDisplay(date)}
 			</button>

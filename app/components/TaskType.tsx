@@ -1,6 +1,7 @@
 "use client";
 import {
 	ArrowPathIcon,
+	BookmarkIcon,
 	CalendarIcon,
 	CheckIcon,
 } from "@heroicons/react/16/solid";
@@ -8,6 +9,12 @@ import React, { useState } from "react";
 import DatePicker from "./ui/DatePicker";
 
 const TASK_TYPES = [
+	{
+		id: "open",
+		label: "Open",
+		icon: BookmarkIcon,
+		description: "A task without a specific deadline",
+	},
 	{
 		id: "one-off",
 		label: "One-off",
@@ -46,7 +53,7 @@ const TaskType = () => {
 		<div className="space-y-4">
 			<fieldset className="fieldset">
 				<legend className="fieldset-legend">Task Type</legend>
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+				<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
 					{TASK_TYPES.map(({ id, label, icon: Icon, description }) => (
 						<button
 							key={id}
@@ -65,7 +72,7 @@ const TaskType = () => {
 							/>
 							<div className="text-center">
 								<div className="font-medium text-base">{label}</div>
-								<div className="text-sm text-base-content/70">
+								<div className="text-xs text-base-content/70">
 									{description}
 								</div>
 							</div>
@@ -86,6 +93,12 @@ const TaskType = () => {
 				<fieldset className="fieldset">
 					<legend className="fieldset-legend">Due Date</legend>
 					<DatePicker id="deadlineDate" />
+				</fieldset>
+			)}
+
+			{selectedType === "open" && (
+				<fieldset className="fieldset">
+					<DatePicker id="deadlineDate" hidden />
 				</fieldset>
 			)}
 

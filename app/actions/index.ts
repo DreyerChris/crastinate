@@ -6,7 +6,7 @@ import { MUTATIONS, QUERIES } from "../db/queries";
 import type { tasksTable } from "../db/schema";
 
 type RecurringFrequency = "daily" | "weekly" | "monthly" | "yearly";
-type TaskType = "one-off" | "deadline" | "recurring";
+type TaskType = "one-off" | "deadline" | "recurring" | "open";
 
 const ensureUTCDate = (dateString: string): string => {
 	if (!dateString) return "";

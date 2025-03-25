@@ -7,7 +7,9 @@ export const tasksTable = sqliteTable(
 		userId: text().notNull(),
 		title: text().notNull(),
 		description: text(),
-		type: text({ enum: ["recurring", "deadline", "one-off"] }).notNull(),
+		type: text({
+			enum: ["recurring", "deadline", "one-off", "open"],
+		}).notNull(),
 		deadlineDate: text().notNull(),
 		status: text({ enum: ["pending", "completed", "deleted"] }).notNull(),
 		completedDate: text(),
